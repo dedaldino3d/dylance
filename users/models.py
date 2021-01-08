@@ -16,6 +16,7 @@ class TimeStampedModel(models.Model):
 class User(AbstractBaseUser, PermissionsMixin):
     username_validator = UnicodeUsernameValidator()
     is_premium = models.BooleanField()
+    is_freelancer = models.BooleanField()
     username = models.CharField(
         _('username'),
         max_length=150,
