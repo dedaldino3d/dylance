@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -43,31 +44,37 @@ class JobActivity(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="job_activity")
     hires = models.PositiveIntegerField(verbose_name=_("hires"))
     interviews = models.PositiveIntegerField(verbose_name=_("interviews"))
-    # TODO: name must be convites (but in english)
-    sended = models.PositiveIntegerField(verbose_name=_("sended"))
 
     class Meta:
         verbose_name = _("job activity")
         verbose_name_plural = _("job activities")
 
 
-# TODO: adicionar convite
-
-
-class Skill(models.Model):
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="skills")
-    name = models.CharField(max_length=250, verbose_name=_("name"))
-    choice = models.CharField(max_length=250, verbose_name=_("choice"))
+class Invite(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="jobs_invites")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="invites")
 
     class Meta:
-        verbose_name = _("skill")
-        verbose_name_plural = _("skills")
+        verbose_name = _("invite")
+        verbose_name_plural = _("invites")
+
+
+class Interview(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="interviews")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="interviews")
+
+    class Meta:
+        verbose_name = "interview"
+        verbose_name_plural = "interviews"
 
 
 class Proposal(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="proposals")
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="proposals")
-    content = models.TextField()
+    title = models.CharField(max_length=255, verbose_name=_("title"), blank=False)
+    description = models.TextField(blank=False)
+    files = ArrayField(models.FileField(upload_to="jobs/proposals", blank=True))
+    links = ArrayField(models.CharField(max_length=255, blank=True), size=4)
 
     class Meta:
         verbose_name = _("proposal")
