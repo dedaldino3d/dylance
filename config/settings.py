@@ -151,13 +151,12 @@ REST_FRAMEWORK = {
 # REST AUTH configuration
 # ------------------------------------------------------------------------------
 #
-# REST_AUTH_REGISTER_SERIALIZERS = {
-#     'REGISTER_SERIALIZER': 'users.serializers.RegisterSerializer'
-# }
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.SignUpSerializer'
+}
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'users.serializers.ProfileSerializer',
-    # 'LOGIN_SERIALIZER': 'users.serializers.CustomLoginSerializer',
 }
 
 REST_USE_JWT = True
