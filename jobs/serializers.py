@@ -25,3 +25,10 @@ class ProposalSerializer(ModelSerializer):
         model = Proposal
         fields = '__all__'
         read_only_fields = ("created_at", "updated_at", "user", "id", "job")
+
+    def create(self, validated_data):
+        if 'request' in self.context:
+            user = self.context['request'].user
+            validated_data.update({
+                user: user
+            })
