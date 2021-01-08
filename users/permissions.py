@@ -17,9 +17,14 @@ class IsOwnerOrReadOnly(BasePermission):
             return user == obj.user
 
 
-class IsPremiumOrDeny(BasePermission):
+class IsPremium(BasePermission):
+    def __init__(self, read_only=False):
+        self.read_only = read_only
+
     def has_object_permission(self, request, view, obj):
         user = request.user
         if user.is_staff:
             return True
+        if self.read_only:
+            return request.method in SAFE_METHODS
         return user.is_premium
