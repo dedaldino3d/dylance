@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.contenttypes.models import ContentType
 
 
 class TimeStampedModel(models.Model):
@@ -47,6 +49,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 UserModel = get_user_model()
+
+
+class Skill(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_("name"), blank=False)
+    description = models.TextField(blank=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
+
+    class Meta:
+        verbose_name = _("skill")
+        verbose_name_plural = _("skills")
 
 
 class Profile(TimeStampedModel):
