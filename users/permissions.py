@@ -15,3 +15,11 @@ class IsOwnerOrReadOnly(BasePermission):
             if user.is_staff:
                 return True
             return user == obj.user
+
+
+class IsPremiumOrDeny(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        if user.is_staff:
+            return True
+        return user.is_premium
