@@ -28,3 +28,8 @@ class IsPremium(BasePermission):
         if self.read_only:
             return request.method in SAFE_METHODS
         return user.is_premium
+
+
+class IsFreelancer(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_freelancer
