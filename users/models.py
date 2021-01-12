@@ -54,9 +54,6 @@ UserModel = get_user_model()
 class Skill(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("name"), blank=False)
     description = models.TextField(blank=True)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
 
     class Meta:
         verbose_name = _("skill")
@@ -68,6 +65,7 @@ class Profile(TimeStampedModel):
     first_name = models.CharField(verbose_name=_("first name"), max_length=80, blank=True)
     last_name = models.CharField(verbose_name=_("last name"), max_length=80, blank=True)
     picture_url = models.ImageField(blank=True, null=True, upload_to='user/profile_image/')
+    skills = models.ForeignKey(Skill, on_delete=models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         verbose_name = _("profile")
