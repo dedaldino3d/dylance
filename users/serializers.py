@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework.serializers import ModelSerializer
 
-from .models import Profile
+from .models import Profile, Skill
 
 User = get_user_model()
 
@@ -34,6 +34,13 @@ class SmallUserSerializer(ModelSerializer):
         )
 
 
+class SkillSerializer(ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = '__all__'
+
+
+##########################################
 class SignUpSerializer(RegisterSerializer):
     def get_cleaned_data(self):
         return {

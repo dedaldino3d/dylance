@@ -6,12 +6,14 @@ from django.http import HttpResponseRedirect
 from rest_auth.registration.views import SocialLoginView, SocialConnectView
 from rest_auth.social_serializers import TwitterLoginSerializer, TwitterConnectSerializer
 from rest_framework import status, generics
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .permissions import IsOwnerOrReadOnly
-from .serializers import UserSerializer, ProfileSerializer
+from users.models import Skill
+from .permissions import IsOwnerOrReadOnly, IsFreelancer
+from .serializers import UserSerializer, ProfileSerializer, SkillSerializer
 
 User = get_user_model()
 
@@ -95,6 +97,7 @@ class ListFreelancers(generics.ListAPIView):
     permission_classes = (AllowAny,)
 
 
+@api_view(http_method_names=['POST'])
 def become_freelancer(request):
     user = request.user
     if user.is_freelancer:
@@ -104,6 +107,7 @@ def become_freelancer(request):
     return Response(status=status.HTTP_200_OK)
 
 
+@api_view(http_method_names=['POST'])
 def un_become_freelancer(request):
     user = request.user
     if not user.is_freelancer:
@@ -112,3 +116,10 @@ def un_become_freelancer(request):
     user.is_freelancer = False
     user.save()
     return Response(status=status.HTTP_200_OK)
+
+
+class ListSkills(generics.ListAPIView):
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
+    permission_classes = (IsAuthenticated, IsFreelancer,)
+
